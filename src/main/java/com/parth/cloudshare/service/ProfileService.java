@@ -15,6 +15,10 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
 
     public ProfileDto createProfile(ProfileDto profileDto){
+        if(profileRepository.existsByClerkId(profileDto.getClerkId())){
+         return updateProfile(profileDto);
+        }
+
         ProfileDocument profileDocument= ProfileDocument.builder()
                 .email(profileDto.getEmail())
                 .firstName(profileDto.getFirstName())
@@ -26,11 +30,9 @@ public class ProfileService {
                 .build();
 
 
-        try{
+
             profileDocument=profileRepository.save(profileDocument);
-        }catch (DuplicateKeyException e){
-            throw new RuntimeException("Email already exits...");
-        }
+
 
         return ProfileDto.builder()
                 .id(profileDocument.getId())
@@ -44,5 +46,47 @@ public class ProfileService {
                 .build();
 
 
+    }
+    public ProfileDto updateProfile(ProfileDto profileDto){
+        ProfileDocument profileDocument=profileRepository.findByClerkId(profileDto.getClerkId());
+        if(profileDocument!=null){
+           if(profileDto.getEmail()!=null && !profileDto.getEmail().isEmpty()){
+               profileDocument.setEmail(profileDto.getEmail());
+           }
+           if(profileDto.getFirstName()!=null && !profileDto.getFirstName().isEmpty()){
+               profileDocument.setFirstName(profileDto.getFirstName());
+
+           }
+           if(profileDto.getLastName()!=null && !profileDto.getLastName().isEmpty()){
+               profileDocument.setLastName(profileDto.getLastName());
+
+           }
+           if(profileDto.getPhotoUrl()!=null && !profileDto.getPhotoUrl().isEmpty()){
+               profileDocument.setPhotoUrl(profileDto.getPhotoUrl());
+
+           }
+           profileDocument=profileRepository.save(profileDocument);
+           return ProfileDto.builder()
+                   .id(profileDocument.getId())
+                   .email(profileDocument.getEmail())
+                   .firstName(profileDocument.getFirstName())
+                   .lastName(profileDocument.getLastName())
+                   .clerkId(profileDocument.getClerkId())
+                   .crestedAt(profileDocument.getCrestedAt())
+                   .credits(profileDocument.getCredits())
+                   .photoUrl(profileDocument.getPhotoUrl())
+                   .build();
+        }
+        return null;
+    }
+    public void delete(String clerkId){
+        ProfileDocument profileDocument=profileRepository.findByClerkId(clerkId);
+        if(profileDocument!=null){
+            profileRepository.delete(profileDocument);
+        }
+    }
+
+    public boolean existsByClerkId(String clerkId) {
+        return profileRepository.existsByClerkId(clerkId);
     }
 }
