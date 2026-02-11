@@ -1,7 +1,9 @@
 package com.parth.cloudshare.controller;
 
+import com.parth.cloudshare.Documents.UserCredit;
 import com.parth.cloudshare.dto.ProfileDto;
 import com.parth.cloudshare.service.ProfileService;
+import com.parth.cloudshare.service.UserCreditService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -18,6 +20,7 @@ public class ClerkWebhookController {
     @Value("${clerk.webhook.secret}")
     private String webhookSecret;
     private final ProfileService profileService;
+    private final UserCreditService userCreditService;
 
 
 
@@ -109,6 +112,7 @@ public class ClerkWebhookController {
                 .photoUrl(imageUrl)
                 .build();
         profileService.createProfile(newProfile);
+        userCreditService.initializeCredits(clerkId);
     }
 
 
@@ -140,6 +144,7 @@ public class ClerkWebhookController {
         updatedProfile=profileService.updateProfile(updatedProfile);
         if(updatedProfile==null){
             handleUserCreated(data);
+            userCreditService.initializeCredits(clerkId);
         }
     }
 

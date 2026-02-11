@@ -31,7 +31,9 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if(request.getRequestURI().contains("/webhooks")){
             filterChain.doFilter(request,response);
+            return; // 🚀 VERY IMPORTANT
         }
+
         String authHeader=request.getHeader("Authorization");
         if(authHeader==null || !authHeader.startsWith("Bearer ")){
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Authorization Header Invalid");
