@@ -7,17 +7,22 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "user_credits")
-@Data
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
+@Document(collection = "files")
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Builder
-public class UserCredit {
+public class FileMetadataDocument {
     @Id
     private String id;
+    private String name;
+    private String type;
+    private long size;
     private String clerkId;
-    private Integer credits;
-    private String plan;//basic premium ultimate
-
-
+    private boolean isPublic;
+    private String fileLocation;
+    private LocalDateTime uploadedAt;
 }

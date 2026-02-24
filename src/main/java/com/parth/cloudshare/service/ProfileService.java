@@ -5,6 +5,8 @@ import com.parth.cloudshare.Documents.ProfileDocument;
 import com.parth.cloudshare.dto.ProfileDto;
 import com.parth.cloudshare.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -88,5 +90,12 @@ public class ProfileService {
 
     public boolean existsByClerkId(String clerkId) {
         return profileRepository.existsByClerkId(clerkId);
+    }
+    public ProfileDocument getCurrentProfile(){
+        if(SecurityContextHolder.getContext().getAuthentication()==null){
+            throw new UsernameNotFoundException("User not Authenticated");
+        }
+        String clerkId=SecurityContextHolder.getContext().getAuthentication().getName();
+        return profileRepository.findByClerkId(clerkId);
     }
 }

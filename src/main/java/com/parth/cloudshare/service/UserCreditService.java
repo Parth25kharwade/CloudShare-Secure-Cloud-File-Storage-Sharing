@@ -1,14 +1,17 @@
 package com.parth.cloudshare.service;
 
 import com.parth.cloudshare.Documents.UserCredit;
+import com.parth.cloudshare.repository.ProfileRepository;
 import com.parth.cloudshare.repository.UserCreditRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserCreditService {
     private final UserCreditRepository userCreditRepository;
+    private final ProfileService profileService;
 
     public UserCredit initializeCredits(String clerkId) {
 
@@ -19,6 +22,23 @@ public class UserCreditService {
                     .build();
           return userCreditRepository.save(userCredit);
 
+
+    }
+    public UserCredit getUserCredits(String clerkId){
+        return userCreditRepository.findByClerkId(clerkId).orElseGet(() -> initializeCredits(clerkId));
+    }
+    public UserCredit getUserCredits(){
+       String clerkId= profileService.getCurrentProfile().getClerkId();
+       return getUserCredits(clerkId);
+
+    }
+    public Boolean hasEnoughCredits(int requiredCredits){
+        UserCredit userCredit=getUserCredits();
+        if(userCredit.getCredits()>=requiredCredits){
+            return true;
+        }else{
+            return false;
+        }
 
     }
 
