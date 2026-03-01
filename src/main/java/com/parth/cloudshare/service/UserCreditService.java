@@ -41,6 +41,14 @@ public class UserCreditService {
         }
 
     }
+    public UserCredit consumeCredits(){
+        UserCredit userCredit=getUserCredits();
+        if(userCredit.getCredits()<=0){
+            return null;
+        }
+        userCredit.setCredits(userCredit.getCredits()-1);
+        return userCreditRepository.save(userCredit);
+    }
 
 
 
