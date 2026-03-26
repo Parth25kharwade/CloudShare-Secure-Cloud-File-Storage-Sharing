@@ -36,10 +36,12 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/webhooks/**",
                                 "/files/public/**",
-                                "/files/download/**",
-                                "/api/v1/payments/verify-payment"   // ✅ FIXED (no space)
+                                "/files/download/**"// ✅ FIXED (no space)
                         ).permitAll()
                         .anyRequest().authenticated()
+                        // In your SecurityConfig, permit these paths without auth:
+
+
                 )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

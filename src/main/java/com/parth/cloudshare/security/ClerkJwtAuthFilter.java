@@ -32,10 +32,7 @@ public class ClerkJwtAuthFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
 
         // ✅ ADD THIS (VERY IMPORTANT)
-        if (path.startsWith("/api/v1/payments/verify-payment")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+
 
         if(request.getRequestURI().contains("/webhooks") || request.getRequestURI().contains("/public") || request.getRequestURI().contains("/download")){
             filterChain.doFilter(request,response);

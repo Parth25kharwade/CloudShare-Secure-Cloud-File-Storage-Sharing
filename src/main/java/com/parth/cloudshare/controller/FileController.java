@@ -81,6 +81,17 @@ public class FileController {
         responce.put("file",fileMetadataDto);
         return ResponseEntity.ok(responce);
     }
+    @GetMapping("/public/download/{id}")
+    public ResponseEntity<Resource> downloadPublicFile(@PathVariable String id) throws IOException {
+        FileMetadataDto file = fileMetadataService.getPublicFile(id); // reuse existing method
+        Path path = Paths.get(file.getFileLocation());
+        Resource resource = new UrlResource(path.toUri());
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename=\"" + file.getName() + "\"")
+                .body(resource);
+    }
+
 
 
 
