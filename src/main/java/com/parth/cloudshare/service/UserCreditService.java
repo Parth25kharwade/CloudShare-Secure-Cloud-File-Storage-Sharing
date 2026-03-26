@@ -49,6 +49,14 @@ public class UserCreditService {
         userCredit.setCredits(userCredit.getCredits()-1);
         return userCreditRepository.save(userCredit);
     }
+    public UserCredit addCredits(String clerkId,int creditsToAdd,String planId){
+        UserCredit userCredit=userCreditRepository.findByClerkId(clerkId)
+                .orElseGet(()->initializeCredits(clerkId));
+        userCredit.setCredits(userCredit.getCredits()+creditsToAdd);
+        userCredit.setPlan(planId);
+        return userCreditRepository.save(userCredit);
+    }
+
 
 
 
